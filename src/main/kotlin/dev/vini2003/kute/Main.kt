@@ -37,10 +37,15 @@ import dev.vini2003.kute.service.model.table.GuildConfigTable
 import dev.vini2003.kute.service.model.table.entity.GuildConfig
 import dev.vini2003.kute.util.firstOrNull
 import discord4j.common.util.Snowflake
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.reactor.mono
+import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
+import kotlin.time.Duration
 
 private val YoutubeApiKey = environmentVariable("YOUTUBE_API_KEY")
 
@@ -88,6 +93,14 @@ fun createYoutube(apiKey: String): YoutubeClient {
 fun createSpotify(clientId: String, clientSecret: String): SpotifyApi {
 	return SpotifyApi.builder().setClientId(clientId).setClientSecret(clientSecret).build().apply {
 		accessToken = clientCredentials().build().execute().accessToken
+		
+		GlobalScope.launch {
+			while (true) {
+				delay(1000L * 60L * 60L)
+				
+				accessToken = clientCredentials().build().execute().accessToken
+			}
+		}
 	}
 }
 
