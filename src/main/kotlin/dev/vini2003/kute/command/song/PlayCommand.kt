@@ -152,16 +152,12 @@ private suspend fun enqueueYouTubePlaylistById(source: CommandSource, id: String
 	
 	if (list.items.isNotEmpty()) {
 		createEnqueuedPlaylistMessage(message, member, list.items.size)
-
-		val first = list.items.first()
 		
-		enqueue(first.snippet.title, first.snippet.channelTitle, first.id, first.snippet.thumbnails, message, member, guild)
-		
-		perhapsPlayNextTrack(AudioManager.Player[guild.id]!!)
-		
-		list.items.subList(1, list.items.size - 1).forEach { item ->
+		list.items.forEach { item ->
 			GlobalScope.launch {
 				enqueue(item.snippet.title, item.snippet.channelTitle, item.id, item.snippet.thumbnails, message, member, guild)
+				
+				perhapsPlayNextTrack(AudioManager.Player[guild.id]!!)
 			}
 		}
 	} else {
@@ -186,15 +182,11 @@ private suspend fun enqueueSpotifyPlaylistById(source: CommandSource, id: String
 		if (playlist.tracks.items.isNotEmpty()) {
 			createEnqueuedPlaylistMessage(message, member, playlist.tracks.items.size)
 			
-			val first = playlist.tracks.items.first()
-			
-			enqueueSpotifyTrackById(source, first.track.id, message, member, guild, false)
-			
-			perhapsPlayNextTrack(AudioManager.Player[guild.id]!!)
-			
 			GlobalScope.launch {
-				playlist.tracks.items.toList().subList(1, playlist.tracks.items.size - 1).forEach { item ->
+				playlist.tracks.items.toList().forEach { item ->
 					enqueueSpotifyTrackById(source, item.track.id, message, member, guild, true)
+					
+					perhapsPlayNextTrack(AudioManager.Player[guild.id]!!)
 				}
 			}
 		} else {
@@ -212,15 +204,11 @@ private suspend fun enqueueSpotifyAlbumById(source: CommandSource, id: String, m
 		if (album.tracks.items.isNotEmpty()) {
 			createEnqueuedAlbumMessage(message, member, album.tracks.items.size)
 			
-			val first = album.tracks.items.first()
-			
-			enqueueSpotifyTrackById(source, first.id, message, member, guild, false)
-			
-			perhapsPlayNextTrack(AudioManager.Player[guild.id]!!)
-			
 			GlobalScope.launch {
-				album.tracks.items.toList().subList(1, album.tracks.items.size - 1).forEach { item ->
+				album.tracks.items.toList().forEach { item ->
 					enqueueSpotifyTrackById(source, item.id, message, member, guild, true)
+					
+					perhapsPlayNextTrack(AudioManager.Player[guild.id]!!)
 				}
 			}
 		} else {

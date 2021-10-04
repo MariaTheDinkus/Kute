@@ -1,7 +1,7 @@
 package dev.vini2003.kute.util
 
-const val YoutubeEmoji = "<:youtube:894693347116089344>"
-const val SpotifyEmoji = "<:spotify:894693352447033425>"
+const val YoutubeEmoji = "<:youtube:894693333392306177>"
+const val SpotifyEmoji = "<:spotify:894693333593632840>"
 
 const val XEmoji = ":x:"
 const val FastForwardEmoji = ":fast_forward:"
